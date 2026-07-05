@@ -1,0 +1,20 @@
+sequenceDiagram
+    actor Learner
+    participant PWA as PWA Client (Browser)
+    participant LocalEngine as AdaptiveEngine (client copy)
+    participant SW as Service Worker
+    participant API as Express /api/profile/complete-module
+    participant ServerEngine as AdaptiveEngine (server copy, same module)
+    participant DB as MongoDB
+
+    Learner->>PWA: Submit module assessment score
+    PWA->>LocalEngine: evaluateModuleCompletion(profile, moduleId, score)
+    LocalEngine-->>PWA: decision - ADVANCE or REMEDIATE (instant, offline)
+    PWA-->>Learner: Immediate feedback and next module from cached path
+    PWA->>SW: POST /api/profile/complete-module (queued if offline)
+    SW->>API: Forward request once connectivity is available
+    API->>ServerEngine: evaluateModuleCompletion(profile, moduleId, score)
+    ServerEngine-->>API: authoritative decision
+    API->>DB: profile.save()
+    API-->>PWA: confirmed decision and updated profile
+    PWA->>PWA: reconcile localStorage with server response

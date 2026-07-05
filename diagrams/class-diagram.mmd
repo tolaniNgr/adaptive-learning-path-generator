@@ -1,0 +1,66 @@
+classDiagram
+    class User {
+        +ObjectId _id
+        +String email
+        +String passwordHash
+        +String subject
+    }
+
+    class LearnerProfile {
+        +ObjectId userId
+        +String proficiencyLevel
+        +String[] currentPath
+        +CompletedModule[] completedModules
+        +Number diagnosticScore
+        +Number lastAssessmentScore
+    }
+
+    class CompletedModule {
+        +String moduleId
+        +Number score
+        +Boolean passed
+    }
+
+    class ContentModule {
+        +String subject
+        +String level
+        +Number sequence
+        +String moduleId
+        +String contentStandard
+        +String contentTextOnly
+        +AssessmentQuestion[] assessmentQuestions
+    }
+
+    class AssessmentQuestion {
+        +String question
+        +String[] options
+        +Number correctOptionIndex
+    }
+
+    class AdaptiveEngine {
+        <<shared module - client and server>>
+        +classifyProficiency(diagnosticScore) String
+        +generatePath(proficiencyLevel, subject) String[]
+        +initialiseLearnerProfile(userId, diagnosticScore, subject) LearnerProfile
+        +evaluateModuleCompletion(profile, moduleId, score) Decision
+    }
+
+    class BandwidthMonitor {
+        <<client-side module>>
+        +measureBandwidthKbps() Number
+        +determineMode(kbps) String
+        +evaluateBandwidthMode() String
+        +startMonitoring() String
+    }
+
+    class AIContentGenerator {
+        <<server-side service>>
+        +generateModulesForSubject(subject) ContentModule[]
+    }
+
+    User "1" --> "1" LearnerProfile : owns
+    LearnerProfile "1" *-- "0..*" CompletedModule : contains
+    ContentModule "1" --> "1..*" AssessmentQuestion : contains
+    AdaptiveEngine ..> LearnerProfile : classifies and routes
+    AIContentGenerator ..> ContentModule : generates via GPT-4o
+    BandwidthMonitor ..> ContentModule : selects delivery mode for

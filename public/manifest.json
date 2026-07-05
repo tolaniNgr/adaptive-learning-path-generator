@@ -1,0 +1,8 @@
+{
+  "name": "Adaptive Learning Path Generator",
+  "short_name": "ALPG",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1d5c3a"
+}

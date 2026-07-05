@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adaptive Learning Path Generator</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Introduction to Computing</h1>
+    <p id="mode-indicator" class="mode-indicator" aria-live="polite"></p>
+  </header>
+
+  <main id="content-root" class="content-root">
+    <p>Loading module content&hellip;</p>
+  </main>
+
+  <footer class="app-footer">
+    <small>Low-Bandwidth Mobile Adaptive Learning Path Generator &mdash; local test build</small>
+  </footer>
+
+  <script src="/bandwidth-monitor.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

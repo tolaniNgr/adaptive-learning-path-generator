@@ -1,0 +1,25 @@
+sequenceDiagram
+    actor Learner
+    participant PWA as PWA Client (Browser)
+    participant Auth as Express /api/auth/register
+    participant AI as AIContentGenerator Service
+    participant GPT as OpenAI GPT-4o API
+    participant DB as MongoDB
+    participant Engine as AdaptiveEngine (shared module)
+
+    Learner->>PWA: Submit registration form (email, password, subject, diagnostic score)
+    PWA->>Auth: POST /api/auth/register
+    Auth->>AI: generateModulesForSubject(subject)
+    AI->>GPT: POST /v1/chat/completions (structured prompt, Sec. 3.7.6)
+    GPT-->>AI: 9 modules (3 per proficiency tier)
+    AI-->>Auth: parsed and validated module array
+    Auth->>DB: insertMany(ContentModule documents)
+    Auth->>Auth: bcrypt.hash(password)
+    Auth->>DB: create(User)
+    Auth->>Engine: initialiseLearnerProfile(userId, diagnosticScore, subject)
+    Engine-->>Auth: proficiencyLevel and currentPath
+    Auth->>DB: create(LearnerProfile)
+    Auth->>Auth: signToken(user)
+    Auth-->>PWA: Set-Cookie (httpOnly, Secure, SameSite=Strict) + profile JSON
+    PWA->>PWA: mirror profile into localStorage (offline-first copy)
+    PWA-->>Learner: Render personalised learning path
