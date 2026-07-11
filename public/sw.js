@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v5';
 const SHELL_CACHE = `app-shell-${CACHE_VERSION}`;
 const CONTENT_CACHE = `content-${CACHE_VERSION}`;
 

@@ -8,7 +8,7 @@ const { connectToDatabase } = require('./config/db');
 const PORT = process.env.PORT || 3000;
 
 async function main() {
-  const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET', 'OPENAI_API_KEY'];
+  const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET', 'GEMINI_API_KEY'];
   const missing = requiredEnvVars.filter((key) => !process.env[key]);
   if (missing.length > 0) {
     console.error(

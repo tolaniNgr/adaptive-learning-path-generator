@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 
 const authRoutes = require('./routes/auth');
 const contentRoutes = require('./routes/content');
-const profileRoutes = require('./routes/profile');
+const enrollmentRoutes = require('./routes/enrollments');
 
 function createApp() {
   const app = express();
@@ -34,7 +34,7 @@ function createApp() {
 
   app.use('/api/auth', authRoutes);
   app.use('/api/content', contentRoutes);
-  app.use('/api/profile', profileRoutes);
+  app.use('/api/enrollments', enrollmentRoutes);
 
   // Serve the PWA shell (index.html, app.js, sw.js, manifest.json, etc.)
   // from the same origin and port as the API, so there is exactly one

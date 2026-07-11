@@ -2,15 +2,12 @@
 
 const mongoose = require('mongoose');
 
-const assessmentQuestionSchema = new mongoose.Schema(
-  {
-    question: { type: String, required: true },
-    options: { type: [String], required: true },
-    correctOptionIndex: { type: Number, required: true },
-  },
-  { _id: false }
-);
-
+/**
+ * A single lesson module. Assessment no longer lives here — it moved to
+ * the section level (see SectionAssessment.js), covering all 3 modules
+ * of a proficiency tier at once rather than gating each module
+ * individually.
+ */
 const contentModuleSchema = new mongoose.Schema(
   {
     subject: { type: String, required: true, trim: true },
@@ -23,8 +20,7 @@ const contentModuleSchema = new mongoose.Schema(
     moduleId: { type: String, required: true, unique: true },
     contentStandard: { type: String, required: true },
     contentTextOnly: { type: String, required: true },
-    assessmentQuestions: { type: [assessmentQuestionSchema], required: true },
-    generatedBy: { type: String, default: 'gpt-4o' },
+    generatedBy: { type: String, default: 'gemini-2.5-flash' },
   },
   { timestamps: true }
 );

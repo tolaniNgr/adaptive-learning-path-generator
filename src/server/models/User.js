@@ -2,6 +2,12 @@
 
 const mongoose = require('mongoose');
 
+/**
+ * A User now holds only account/auth information. Everything that used
+ * to live here per-account (subject, diagnostic quiz, related topics) is
+ * now per-Enrollment, since a single account can enroll in many subjects
+ * without creating a new account or logging out for each one.
+ */
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -14,13 +20,6 @@ const userSchema = new mongoose.Schema(
     passwordHash: {
       type: String,
       required: true,
-    },
-    subject: {
-      type: String,
-      required: true,
-      trim: true,
-      // The subject the learner registered for, e.g. "Introduction to Computing".
-      // AI content generation (Section 3.7.6) runs once for this subject at registration.
     },
   },
   { timestamps: true }

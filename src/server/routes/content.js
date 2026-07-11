@@ -3,6 +3,7 @@
 const express = require('express');
 const ContentModule = require('../models/ContentModule');
 const { requireAuth } = require('../middleware/auth');
+const { asyncHandler } = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ const router = express.Router();
  * re-measure bandwidth, since only the client has visibility into the
  * learner's actual last-mile connection.
  */
-router.get('/:moduleId', requireAuth, async (req, res) => {
+router.get('/:moduleId', requireAuth, asyncHandler(async (req, res) => {
   const { moduleId } = req.params;
   const mode = req.query.mode === 'text-only' ? 'text-only' : 'standard';
 
@@ -32,6 +33,6 @@ router.get('/:moduleId', requireAuth, async (req, res) => {
     content: mode === 'text-only' ? contentModule.contentTextOnly : contentModule.contentStandard,
     assessmentQuestions: contentModule.assessmentQuestions,
   });
-});
+}));
 
 module.exports = router;

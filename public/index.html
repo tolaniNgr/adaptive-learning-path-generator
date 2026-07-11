@@ -9,16 +9,83 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>Introduction to Computing</h1>
+    <h1 id="app-title">Adaptive Learning Path Generator</h1>
     <p id="mode-indicator" class="mode-indicator" aria-live="polite"></p>
   </header>
 
-  <main id="content-root" class="content-root">
-    <p>Loading module content&hellip;</p>
-  </main>
+  <section id="auth-section" class="auth-section">
+    <div class="auth-tabs">
+      <form id="register-form" class="auth-form">
+        <h2>Register</h2>
+        <label>Email <input type="email" name="email" required /></label>
+        <label>Password <input type="password" name="password" required minlength="8" /></label>
+        <button type="submit">Register</button>
+      </form>
+
+      <form id="login-form" class="auth-form">
+        <h2>Log in</h2>
+        <label>Email <input type="email" name="email" required /></label>
+        <label>Password <input type="password" name="password" required /></label>
+        <button type="submit">Log in</button>
+      </form>
+    </div>
+    <p id="auth-error" class="auth-error" role="alert"></p>
+  </section>
+
+  <section id="dashboard-section" class="dashboard-section" hidden>
+    <h2>My Courses</h2>
+    <div id="enrollment-list" class="enrollment-list"></div>
+
+    <form id="new-course-form" class="auth-form">
+      <h3>Start a new course</h3>
+      <label>Subject <input type="text" id="new-course-subject" name="subject" placeholder="Fiscal Policy" required /></label>
+      <button type="submit">Start</button>
+    </form>
+    <p id="dashboard-error" class="auth-error" role="alert"></p>
+
+    <button id="logout-button" class="logout-button">Log out</button>
+  </section>
+
+  <section id="diagnostic-section" class="diagnostic-section" hidden>
+    <h2>Diagnostic Assessment: <span id="diagnostic-subject-name"></span></h2>
+    <p>Answer these 10 questions as best you can — your starting proficiency level is determined by your score, not chosen by you.</p>
+    <form id="diagnostic-form">
+      <div id="diagnostic-questions"></div>
+      <button type="submit">Submit assessment</button>
+    </form>
+    <p id="diagnostic-error" class="auth-error" role="alert"></p>
+  </section>
+
+  <section id="app-section" class="app-section" hidden>
+    <button id="back-to-dashboard" class="back-button">&larr; My Courses</button>
+    <div id="profile-summary" class="profile-summary"></div>
+
+    <nav id="module-nav" class="module-nav"></nav>
+
+    <main id="content-root" class="content-root">
+      <p>Loading module content&hellip;</p>
+    </main>
+
+    <div id="module-navigation-buttons" class="module-navigation-buttons">
+      <button id="prev-module-button" type="button">&larr; Back</button>
+      <button id="next-module-button" type="button">Next &rarr;</button>
+    </div>
+
+    <form id="section-assessment-form" class="assessment-form" hidden>
+      <h3>Section Assessment: <span id="section-assessment-level"></span></h3>
+      <p>You have read all the modules in this section. Answer from memory — you can review the modules again using the Back button if you are not ready yet.</p>
+      <div id="section-assessment-questions"></div>
+      <button type="submit">Submit assessment</button>
+      <p id="section-assessment-result" role="status"></p>
+    </form>
+
+    <div id="related-topics" class="related-topics" hidden></div>
+
+    <button id="logout-button-2" class="logout-button">Log out</button>
+  </section>
 
   <footer class="app-footer">
-    <small>Low-Bandwidth Mobile Adaptive Learning Path Generator &mdash; local test build</small>
+    <small>Low-Bandwidth Mobile Adaptive Learning Path Generator</small>
   </footer>
 
   <script src="/bandwidth-monitor.js"></script>

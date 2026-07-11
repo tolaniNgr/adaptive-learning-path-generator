@@ -52,3 +52,251 @@ body {
   color: var(--muted);
   font-size: 0.75rem;
 }
+
+/* Auth screen */
+.auth-section {
+  max-width: 480px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.auth-form h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.auth-form input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.auth-form button {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.auth-error {
+  color: #b00020;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* App screen */
+.profile-summary {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  background: #f5f7f5;
+  border-radius: 8px;
+}
+
+.profile-summary p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.assessment-form {
+  max-width: 640px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.assessment-form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.assessment-form legend {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.logout-button {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid var(--muted);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .auth-tabs {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Diagnostic quiz screen */
+.diagnostic-section {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.diagnostic-section fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.diagnostic-section legend {
+  font-weight: bold;
+  padding: 0 0.5rem;
+}
+
+.diagnostic-section button[type="submit"] {
+  padding: 0.6rem 1.2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Related topics, shown on path completion */
+.related-topics {
+  max-width: 640px;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  background: #f0f6ff;
+  border-radius: 8px;
+}
+
+.related-topics h3 {
+  margin-top: 0;
+}
+
+.related-topics ul {
+  margin: 0.5rem 0;
+}
+
+/* Dashboard */
+.dashboard-section {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.enrollment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.enrollment-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.enrollment-card:hover {
+  border-color: var(--accent);
+}
+
+.enrollment-card span {
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.back-button {
+  display: block;
+  margin: 0 0 1rem 0;
+  padding: 0.4rem 0.8rem;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.related-topics a {
+  color: var(--accent, #1d5c3a);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Module navigation */
+.module-nav {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.module-nav-item {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.module-nav-item.active {
+  background: var(--accent, #1d5c3a);
+  color: white;
+  border-color: var(--accent, #1d5c3a);
+}
+
+.module-navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  max-width: 640px;
+  margin: 1rem auto;
+}
+
+.module-navigation-buttons button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.module-navigation-buttons button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
