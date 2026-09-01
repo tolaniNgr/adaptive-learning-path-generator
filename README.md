@@ -2,7 +2,7 @@
 
 Implementation supporting the final year project *"Design of a Mobile
 Adaptive Learning Path Generator for Low-Bandwidth Environments"*
-(Ilori Samson Omotola, 2023/C/SENG/0346, Miva Open University).
+
 
 ## What's actually verified vs. what needs real infrastructure
 
@@ -15,17 +15,13 @@ This codebase was developed and tested in a sandboxed environment with
   `tests/adaptive-engine.test.js` (28 assertions, all passing).
 - `src/bandwidth-monitor.js` + `public/*` (PWA shell, service worker) —
   load-tested in a real headless Chromium browser under real simulated
-  2G/3G network throttling via `tests/performance_test.py`. See Chapter
-  Four for the measured load times and data transfer figures this
-  produced.
+  2G/3G network throttling via `tests/performance_test.py`.
 - `src/server/**` (Express app, MongoDB models, JWT auth, bcrypt hashing,
   Gemini integration) — the actual route logic was integration-tested via
   `tests/backend-integration.test.js`, using in-memory substitutes for
-  MongoDB and the Gemini API (since this sandbox couldn't reach either),
+  MongoDB and the Gemini API,
   and Node's built-in crypto module standing in for the native
-  bcrypt/jsonwebtoken bindings. This verifies the business logic is
-  correct; it does not verify the real MongoDB driver or the real Gemini
-  API integration, which is exactly what the steps below let you confirm.
+  bcrypt/jsonwebtoken bindings. 
 
 **Needs you to run it for real:**
 - A real MongoDB instance (local or Atlas)
