@@ -40,11 +40,40 @@
  * request this large with an empty answer.
  */
 
+const sanitizeHtml = require('sanitize-html');
 const { buildModuleId, MIN_SECTION_ASSESSMENT_QUESTIONS, LEVEL_ORDER } = require('../../adaptive-engine');
 
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
 const MODEL = 'gemini-2.5-flash';
 const MAX_ATTEMPTS = 3;
+
+/**
+ * contentStandard is deliberately HTML (see buildPrompt) and the client
+ * renders it with innerHTML. Because ContentModule docs are keyed by
+ * subject+level+sequence and shared across every learner who enrolls in
+ * that subject, unsanitized output here would be a STORED XSS affecting
+ * every future learner of that subject, not just the one who triggered
+ * generation. Allowlist is intentionally small: just what a lesson needs.
+ */
+const LESSON_HTML_SANITIZE_OPTIONS = {
+  allowedTags: ['h1', 'h2', 'h3', 'h4', 'p', 'ul', 'ol', 'li', 'strong', 'em', 'b', 'i', 'code', 'pre', 'blockquote', 'br', 'a'],
+  allowedAttributes: { a: ['href'] },
+  allowedSchemes: ['http', 'https'],
+};
+
+function sanitizeLessonHtml(html) {
+  return sanitizeHtml(html, LESSON_HTML_SANITIZE_OPTIONS);
+}
+
+/**
+ * contentTextOnly is meant to be plain text (see buildPrompt), but nothing
+ * enforces that on the model's output and it also goes through innerHTML
+ * on the client, so it gets the same treatment with an empty allowlist —
+ * strip any markup entirely rather than trusting it's already plain.
+ */
+function stripAllHtml(text) {
+  return sanitizeHtml(text, { allowedTags: [], allowedAttributes: {} });
+}
 
 /**
  * Repairs the single most common cause of "Bad escaped character in JSON"
@@ -173,8 +202,8 @@ async function callGeminiOnce(subject, apiKey) {
       level: m.level,
       sequence: m.sequence,
       moduleId: buildModuleId(subject, m.level, m.sequence),
-      contentStandard: m.contentStandard,
-      contentTextOnly: m.contentTextOnly,
+      contentStandard: sanitizeLessonHtml(m.contentStandard),
+      contentTextOnly: stripAllHtml(m.contentTextOnly),
       generatedBy: MODEL,
     })),
   };
@@ -204,4 +233,11 @@ async function generateRegistrationContent(subject) {
   throw lastError;
 }
 
-module.exports = { generateRegistrationContent, buildPrompt, repairInvalidJsonEscapes, MAX_ATTEMPTS };
+module.exports = {
+  generateRegistrationContent,
+  buildPrompt,
+  repairInvalidJsonEscapes,
+  sanitizeLessonHtml,
+  stripAllHtml,
+  MAX_ATTEMPTS,
+};

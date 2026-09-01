@@ -6,7 +6,7 @@ const {
   classifyProficiency,
   generatePath,
   initialiseLearnerProfile,
-  evaluateModuleCompletion,
+  evaluateSectionAssessment,
   PASS_THRESHOLD,
 } = require('../src/adaptive-engine');
 
@@ -75,11 +75,14 @@ test('initialiseLearnerProfile produces a correctly classified, path-assigned pr
   const profile = initialiseLearnerProfile('user-001', 82, 'ComputingIntro');
   assert.equal(profile.proficiencyLevel, 'Advanced');
   assert.equal(profile.currentPath.length, 3);
-  assert.deepEqual(profile.completedModules, []);
+  assert.deepEqual(profile.sectionAttempts, []);
+  assert.equal(profile.unlockedSectionsCount, 1);
   assert.equal(profile.diagnosticScore, 82);
 });
 
-// Module completion / pass-remediate boundary at the 60% threshold
+// Section assessment pass-remediate boundary at the 60% threshold.
+// (Assessment moved from per-module to per-section — see adaptive-engine.js
+// header comment — so this routes on a section LEVEL, not a module ID.)
 const completionCases = [
   { score: 0, expected: 'REMEDIATE' },
   { score: 30, expected: 'REMEDIATE' },
@@ -91,22 +94,24 @@ const completionCases = [
   { score: 100, expected: 'ADVANCE' },
 ];
 
-test(`module completion routing — ${completionCases.length} test cases at PASS_THRESHOLD=${PASS_THRESHOLD}`, () => {
+test(`section assessment routing — ${completionCases.length} test cases at PASS_THRESHOLD=${PASS_THRESHOLD}`, () => {
   let correct = 0;
+  // classifyProficiency(50) -> 'Intermediate', so the first (and only
+  // currently unlocked) section awaiting assessment is 'Intermediate'.
   const profile = initialiseLearnerProfile('user-002', 50, 'ComputingIntro');
   for (const { score, expected } of completionCases) {
-    const { decision } = evaluateModuleCompletion(profile, 'computingintro-intermediate-1', score);
+    const { decision } = evaluateSectionAssessment(profile, 'Intermediate', score);
     if (decision === expected) correct += 1;
     assert.equal(decision, expected, `score ${score}: expected ${expected}, got ${decision}`);
   }
   console.log(`  -> ${correct}/${completionCases.length} routing decisions correct`);
 });
 
-test('evaluateModuleCompletion correctly appends to completedModules without mutating the original profile', () => {
-  const profile = initialiseLearnerProfile('user-003', 45, 'ComputingIntro');
-  const { updatedProfile } = evaluateModuleCompletion(profile, 'computingintro-intermediate-1', 72);
-  assert.equal(profile.completedModules.length, 0, 'original profile must not be mutated');
-  assert.equal(updatedProfile.completedModules.length, 1);
-  assert.equal(updatedProfile.completedModules[0].passed, true);
+test('evaluateSectionAssessment correctly appends to sectionAttempts without mutating the original profile', () => {
+  const profile = initialiseLearnerProfile('user-003', 45, 'ComputingIntro'); // -> Intermediate
+  const { updatedProfile } = evaluateSectionAssessment(profile, 'Intermediate', 72);
+  assert.equal(profile.sectionAttempts.length, 0, 'original profile must not be mutated');
+  assert.equal(updatedProfile.sectionAttempts.length, 1);
+  assert.equal(updatedProfile.sectionAttempts[0].passed, true);
   assert.equal(updatedProfile.lastAssessmentScore, 72);
 });

@@ -13,23 +13,26 @@
     <p id="mode-indicator" class="mode-indicator" aria-live="polite"></p>
   </header>
 
-  <section id="auth-section" class="auth-section">
-    <div class="auth-tabs">
-      <form id="register-form" class="auth-form">
-        <h2>Register</h2>
-        <label>Email <input type="email" name="email" required /></label>
-        <label>Password <input type="password" name="password" required minlength="8" /></label>
-        <button type="submit">Register</button>
-      </form>
+  <section id="login-section" class="auth-section">
+    <form id="login-form" class="auth-form">
+      <h2>Log in</h2>
+      <label>Email <input type="email" name="email" required /></label>
+      <label>Password <input type="password" name="password" required /></label>
+      <button type="submit">Log in</button>
+    </form>
+    <p class="auth-switch">New here? <a href="#" id="show-register-link">Create an account</a></p>
+    <p id="login-error" class="auth-error" role="alert"></p>
+  </section>
 
-      <form id="login-form" class="auth-form">
-        <h2>Log in</h2>
-        <label>Email <input type="email" name="email" required /></label>
-        <label>Password <input type="password" name="password" required /></label>
-        <button type="submit">Log in</button>
-      </form>
-    </div>
-    <p id="auth-error" class="auth-error" role="alert"></p>
+  <section id="register-section" class="auth-section" hidden>
+    <form id="register-form" class="auth-form">
+      <h2>Register</h2>
+      <label>Email <input type="email" name="email" required /></label>
+      <label>Password <input type="password" name="password" required minlength="8" /></label>
+      <button type="submit">Register</button>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="#" id="show-login-link">Log in</a></p>
+    <p id="register-error" class="auth-error" role="alert"></p>
   </section>
 
   <section id="dashboard-section" class="dashboard-section" hidden>
@@ -39,8 +42,12 @@
     <form id="new-course-form" class="auth-form">
       <h3>Start a new course</h3>
       <label>Subject <input type="text" id="new-course-subject" name="subject" placeholder="Fiscal Policy" required /></label>
-      <button type="submit">Start</button>
+      <button type="submit" id="new-course-submit">Begin Learning</button>
     </form>
+    <div id="new-course-loading" class="loading-indicator" hidden>
+      <span class="spinner" aria-hidden="true"></span>
+      <span>Generating your course&hellip; this can take a moment.</span>
+    </div>
     <p id="dashboard-error" class="auth-error" role="alert"></p>
 
     <button id="logout-button" class="logout-button">Log out</button>

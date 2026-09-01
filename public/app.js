@@ -1,14 +1,19 @@
 'use strict';
 
 (function () {
-  const authSection = document.getElementById('auth-section');
+  const loginSection = document.getElementById('login-section');
+  const registerSection = document.getElementById('register-section');
   const dashboardSection = document.getElementById('dashboard-section');
   const diagnosticSection = document.getElementById('diagnostic-section');
   const appSection = document.getElementById('app-section');
-  const authError = document.getElementById('auth-error');
+  const loginError = document.getElementById('login-error');
+  const registerError = document.getElementById('register-error');
   const dashboardError = document.getElementById('dashboard-error');
   const enrollmentList = document.getElementById('enrollment-list');
   const newCourseForm = document.getElementById('new-course-form');
+  const newCourseSubjectInput = document.getElementById('new-course-subject');
+  const newCourseSubmit = document.getElementById('new-course-submit');
+  const newCourseLoading = document.getElementById('new-course-loading');
   const diagnosticForm = document.getElementById('diagnostic-form');
   const diagnosticError = document.getElementById('diagnostic-error');
   const diagnosticSubjectName = document.getElementById('diagnostic-subject-name');
@@ -33,8 +38,19 @@
   let viewIndex = 0; // which module in accessibleModules is currently shown
   let pendingEnrollmentId = null;
 
+  // Escapes text interpolated into innerHTML that is NOT meant to contain
+  // markup (subject names, quiz/assessment question and option text —
+  // all learner- or AI-generated strings with no sanitization guarantee
+  // of their own). contentStandard/contentTextOnly are the one deliberate
+  // exception: the server sanitizes those before storage, so they're
+  // inserted as-is to preserve their intended formatting.
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  }
+
   function showOnly(section) {
-    authSection.hidden = section !== 'auth';
+    loginSection.hidden = section !== 'login';
+    registerSection.hidden = section !== 'register';
     dashboardSection.hidden = section !== 'dashboard';
     diagnosticSection.hidden = section !== 'diagnostic';
     appSection.hidden = section !== 'app';
@@ -72,7 +88,7 @@
         .map(
           (e) => `
         <button class="enrollment-card" data-id="${e.id}">
-          <strong>${e.subject}</strong>
+          <strong>${escapeHtml(e.subject)}</strong>
           <span>${
             !e.diagnosticCompleted
               ? 'Diagnostic assessment pending'
@@ -107,6 +123,9 @@
 
   async function startNewCourse(subject) {
     dashboardError.textContent = '';
+    newCourseSubmit.disabled = true;
+    newCourseSubjectInput.disabled = true;
+    newCourseLoading.hidden = false;
     try {
       const data = await api('/api/enrollments', { method: 'POST', body: JSON.stringify({ subject }) });
       pendingEnrollmentId = data.enrollment.id;
@@ -117,6 +136,10 @@
         return;
       }
       dashboardError.textContent = err.message;
+    } finally {
+      newCourseSubmit.disabled = false;
+      newCourseSubjectInput.disabled = false;
+      newCourseLoading.hidden = true;
     }
   }
 
@@ -128,9 +151,9 @@
       .map(
         (q, i) => `
       <fieldset>
-        <legend>${i + 1}. [${q.difficulty}] ${q.question}</legend>
+        <legend>${i + 1}. [${q.difficulty}] ${escapeHtml(q.question)}</legend>
         ${q.options
-          .map((opt, oi) => `<label><input type="radio" name="d${i}" value="${oi}" required /> ${opt}</label><br/>`)
+          .map((opt, oi) => `<label><input type="radio" name="d${i}" value="${oi}" required /> ${escapeHtml(opt)}</label><br/>`)
           .join('')}
       </fieldset>`
       )
@@ -223,7 +246,7 @@
     const mode = window.BandwidthMonitor.getMode();
     try {
       const data = await api(`/api/content/${moduleId}?mode=${encodeURIComponent(mode)}`);
-      contentRoot.innerHTML = `<h2>${data.moduleId}</h2><div>${data.content}</div>`;
+      contentRoot.innerHTML = `<h2>${escapeHtml(data.moduleId)}</h2><div>${data.content}</div>`;
     } catch (err) {
       contentRoot.innerHTML = `<p>Unable to load content (${err.message}). You may be offline.</p>`;
     }
@@ -259,8 +282,8 @@
       .map(
         (q, i) => `
       <fieldset>
-        <legend>${i + 1}. ${q.question}</legend>
-        ${q.options.map((opt, oi) => `<label><input type="radio" name="sa${i}" value="${oi}" required /> ${opt}</label><br/>`).join('')}
+        <legend>${i + 1}. ${escapeHtml(q.question)}</legend>
+        ${q.options.map((opt, oi) => `<label><input type="radio" name="sa${i}" value="${oi}" required /> ${escapeHtml(opt)}</label><br/>`).join('')}
       </fieldset>`
       )
       .join('');
@@ -345,22 +368,25 @@
 
   async function register(event) {
     event.preventDefault();
-    authError.textContent = '';
+    registerError.textContent = '';
     const form = event.target;
     try {
       await api('/api/auth/register', {
         method: 'POST',
         body: JSON.stringify({ email: form.email.value, password: form.password.value }),
       });
+      // Registration logs the user in server-side (sets the session
+      // cookie), so this goes straight to the dashboard rather than
+      // back to the login view.
       await loadDashboard();
     } catch (err) {
-      authError.textContent = err.message;
+      registerError.textContent = err.message;
     }
   }
 
   async function login(event) {
     event.preventDefault();
-    authError.textContent = '';
+    loginError.textContent = '';
     const form = event.target;
     try {
       await api('/api/auth/login', {
@@ -369,7 +395,7 @@
       });
       await loadDashboard();
     } catch (err) {
-      authError.textContent = err.message;
+      loginError.textContent = err.message;
     }
   }
 
@@ -378,8 +404,19 @@
     currentEnrollmentId = null;
     enrollment = null;
     localStorage.removeItem('lastEnrollmentId');
-    showOnly('auth');
+    showOnly('login');
   }
+
+  document.getElementById('show-register-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    registerError.textContent = '';
+    showOnly('register');
+  });
+  document.getElementById('show-login-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    loginError.textContent = '';
+    showOnly('login');
+  });
 
   document.getElementById('register-form').addEventListener('submit', register);
   document.getElementById('login-form').addEventListener('submit', login);
@@ -415,7 +452,7 @@
       }
       await loadDashboard();
     } catch (err) {
-      showOnly('auth');
+      showOnly('login');
     }
   });
 

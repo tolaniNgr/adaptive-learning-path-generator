@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const mongoose = require('mongoose');
 const Enrollment = require('../models/Enrollment');
 const ContentModule = require('../models/ContentModule');
 const SectionAssessment = require('../models/SectionAssessment');
@@ -70,6 +71,10 @@ function currentPendingSection(enrollment) {
 }
 
 async function loadOwnedEnrollment(req, res) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.enrollmentId)) {
+    res.status(404).json({ error: 'Enrollment not found.' });
+    return null;
+  }
   const enrollment = await Enrollment.findOne({ _id: req.params.enrollmentId });
   if (!enrollment) {
     res.status(404).json({ error: 'Enrollment not found.' });

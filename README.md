@@ -13,7 +13,7 @@ This codebase was developed and tested in a sandboxed environment with
 - `src/adaptive-engine.js` — the rule-based classification and routing
   engine. Pure JavaScript, no external dependencies, fully exercised by
   `tests/adaptive-engine.test.js` (28 assertions, all passing).
-- `src/bandwidth-monitor.js` + `public/*` (PWA shell, service worker) —
+- `public/bandwidth-monitor.js` + `public/*` (PWA shell, service worker) —
   load-tested in a real headless Chromium browser under real simulated
   2G/3G network throttling via `tests/performance_test.py`.
 - `src/server/**` (Express app, MongoDB models, JWT auth, bcrypt hashing,
@@ -35,7 +35,6 @@ This codebase was developed and tested in a sandboxed environment with
 ```
 src/
   adaptive-engine.js       # Rule-based classification + path routing (client AND server)
-  bandwidth-monitor.js     # Bandwidth probe + mode switching (client)
   content.js               # Realistic long-form test content, shared by the E2E/performance tests
   server/                  # The real backend
     server.js              # Entry point
@@ -47,7 +46,7 @@ src/
     services/aiContentGenerator.js  # Gemini integration
     package.json
     .env.example
-public/                    # PWA shell: index.html, app.js, sw.js, manifest.json, styles
+public/                    # PWA shell: index.html, app.js, bandwidth-monitor.js, sw.js, manifest.json, styles
 diagrams/                  # Class + sequence diagrams (.mmd source and rendered .png)
 tests/
   adaptive-engine.test.js       # Real, run with `node --test`

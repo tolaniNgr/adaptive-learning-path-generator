@@ -43,6 +43,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Only GET requests are cacheable per the Cache API spec — cache.put()
+  // throws for POST/PUT/etc. Every non-GET /api/ call (login, register,
+  // enroll, diagnostic/assessment submission) must go straight to the
+  // network and never be cached.
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   // Network-first with stale-while-revalidate for dynamic API content.
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(

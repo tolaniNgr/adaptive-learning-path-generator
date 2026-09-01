@@ -46,11 +46,20 @@ test('generateRegistrationContent retries on malformed JSON and succeeds once a 
           sequence: seq,
           contentStandard: 'x',
           contentTextOnly: 'y',
-          assessmentQuestions: [{ question: 'q', options: ['a', 'b'], correctOptionIndex: 0 }],
         });
       }
     }
-    return { diagnosticQuiz, modules, relatedTopics: ['A', 'B', 'C'] };
+    // Assessment lives at the SECTION level now (one per proficiency
+    // tier, covering all 3 of that tier's modules), not per module.
+    const sectionAssessments = ['Beginner', 'Intermediate', 'Advanced'].map((level) => ({
+      level,
+      questions: Array.from({ length: 5 }, (_, i) => ({
+        question: `${subject} ${level} section question ${i}`,
+        options: ['a', 'b', 'c', 'd'],
+        correctOptionIndex: 0,
+      })),
+    }));
+    return { diagnosticQuiz, modules, sectionAssessments, relatedTopics: ['A', 'B', 'C'] };
   }
 
   let callCount = 0;

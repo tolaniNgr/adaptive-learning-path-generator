@@ -111,6 +111,56 @@ body {
   font-size: 0.9rem;
 }
 
+.auth-switch {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.75rem 0 0 0;
+}
+
+.auth-switch a {
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Loading feedback (e.g. while a course's content is being generated) */
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  background: #f5f7f5;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.loading-indicator[hidden] {
+  display: none;
+}
+
+.spinner {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  border: 2px solid #d8ded9;
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-form button:disabled,
+.auth-form input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* App screen */
 .profile-summary {
   max-width: 640px;
