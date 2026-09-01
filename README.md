@@ -94,16 +94,3 @@ node --test tests/adaptive-engine.test.js
 
 This runs immediately with no dependencies, no network, and no
 credentials — it's pure logic.
-
-## What to do next (for the report / VIVA)
-
-1. Push this to a real Git repository and reference it in Appendix B.
-2. Get MongoDB + a Gemini API key, run `npm start`, and do one real
-   registration yourself as a smoke test.
-3. Deploy somewhere reachable (Render, Railway, Fly.io all have free
-   tiers) if you want participants to access it without using your own
-   machine.
-4. Run a real SUS usability session with 10 real participants against the
-   real, deployed system.
-5. Send the real repository URL back so the deployment paragraph in
-   Chapter Three can reference it instead of a placeholder.
